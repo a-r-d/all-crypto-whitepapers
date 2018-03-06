@@ -1,0 +1,119 @@
+THE ART OF ITERATION
+Cryptocurrencies are protocols implemented as software. Protocols are simply intelligent conversations between participants. Software is ultimately the manipulation of data given some goal. Yet the difference between solid, reliable software as well as useful, secure protocols and their converse is completely human.
+
+Good software needs accountability, clear business requirements, repeatable processes, thorough testing and tireless iteration. Good software also needs reasonably talented developers with enough domain specific knowledge to properly design a system that can fully resolve whatever problem they are trying to solve.
+
+As for useful and secure protocols, especially ones involving cryptography and distributed systems, they start in a more academic and standards driven process. Peer review, endless debates and a firm concept of trade offs are necessary to ensure a protocol is useful. Yet these alone are not sufficient, protocols need to be implemented and tested by real life use.
+
+The unique challenge in the cryptocurrency industry is that two completely different philosophies are mangled together without a proper Hegelian synthesis. Our thesis is a “move fast and break things” startup mentality driven by youth, greed and passion. The antithesis is a slow, methodical and academically oriented approach motivated by a desire to solidify the innovations of our space into a nice niche enjoying ample funding and prestige.
+
+The result is that many cryptocurrencies are either entirely specified on a white paper only relevant to a CV or just by hastily written code. None of the current top ten18 cryptocurrencies by market capitalization are based upon a peer reviewed protocol. None of the current ten top cryptocurrencies were implemented from a formal specification19.
+
+Yet billions of dollars of value are at stake. Once deployed, a cryptocurrency is exceedingly difficult to change. How does a user know they are using a secure system? How does a user know that the marketing claims are legitimate? What if the proposed protocol can never achieve the claims?
+
+This lack of synthesis and respect for process is one of the primary reasons IOHK wanted to build Cardano. Our hope was to develop a reference project that would serve as an example of how to do things in a more effective, sane and honest way.
+
+The goal is not to propose a totally new way of developing software and protocols, but rather to acknowledge that great software and protocols already exist and we can mimic the conditions that led to their creation. Second, to make these conditions publicly known and open source if possible so that they can be imitated for the benefit of the entire field.
+
+FACTS AND OPINIONS
+The other concern is over where facts end and opinion begins. There are hundreds of programming languages, dozens of development paradigms and more than one philosophy on project management. The academic world is riddled with its own challenges stemming from its distance from business concerns and practicality.
+
+For Cardano, we first attempted to capture obvious deficiencies that can be universally agreed to be useful from an engineering perspective. For example, cryptography and distributed systems are both extraordinarily involved topics with far too many examples of how naive hands can make horrific mistakes. Therefore, any protocol requiring insight from these domains needs to be designed by an acknowledged expert and be submitted for review by other experts.
+
+Ouroboros is our first case study of this area. It was designed by a team of cryptographers with a large, diverse and publicly verifiable publication history. It was built according to the standard cryptography process, with security assumptions, an adversarial model and proofs. These proofs were checked by submission to conferences20 and also independently by computer proofs written in Isabelle by a team at the University of Cambridge21.
+
+Yet this work alone provides no guarantees of usefulness — just a rigorous check of a security model given some assumptions. For usefulness, one needs to implement and test the protocol. Our developers have done so in both Haskell and also Rust. This work revealed that more effort needed to be focused on the synchronization model, which led to the creation of Ouroboros Praos.
+
+This art of iteration is what produces great protocols, with each step leading to new lessons and a requirement to re-verify the correctness of prior step22. It is costly, time consuming, and at times truly tedious, yet it is required to ensure a protocol is correctly designed.
+
+Protocols — especially ones to be used by billions of people — are not short lived and rapidly evolving. Rather they are intended to be followed for years to decades. It seems entirely reasonable that, prior to burdening the world with a new financial system we all have to live with for the next 100 years, we want to demand some tedium and rigor from its designers.
+
+FUNCTIONAL SINS
+Moving into more opinionated territory, the tools, languages and methodologies used in software development are more artifacts of religious providence than objective reality. Source code is like written prose. Everyone has an opinion of what is good — and what is being communicated is, at times, less important than how it is communicated.
+
+We must commit the sin of choosing a side accepting that it will be wrong in at least one person’s eyes. However, there is at least a large corpus of justification behind our choice.
+
+The protocols making Cardano possible are being implemented in Haskell. The user interface has been encapsulated in a fork of Electron that we are calling Daedalus. We have chosen to use the web architectural model where possible, and for our database, we opted for a key-value paradigm using RocksDB.
+
+From a component level, this abstraction means that maintenance is far simpler, better technology can be substituted later with little effort, and that our stack is partly tied to the development efforts of Github and Facebook.
+
+Using a WebGuI allows us to leverage React and develop front end features using tools understood by hundreds of thousands of JavaScript developers. Using a web architecture means that components can be treated as services and the security model is sensible.
+
+Choosing Haskell for protocol development was the most difficult choice. Even in the functional world, there are ample choices. On the more flexible and impure side, there are languages like Clojure, Scala and F#, which benefit from the enormous libraries of Java and the .Net ecosystems while preserving some of the best aspects of functional programming.
+
+There are more academically oriented languages such as Agda and Idris that have a close connection to techniques that would allow for strong verification of correctness. Yet they lack reasonable libraries and have a subpar development experience.
+
+For Cardano, the choice came down to Ocaml and Haskell. Ocaml is a wonderful language with a great community, good tooling, reasonable development experience and a great legacy in the formal verification space through Coq23. So why did we choose Haskell?
+
+WHY HASKELL?
+The protocols that compose Cardano are distributed, bundled with cryptography and require a high degree of fault tolerance. On the best days, there will still be Byzantine actors, malformed messages and faulty clients unintentionally causing some form of havok on the network.
+
+First, we wanted a language that enjoys a strong type system where we could easily use tools such as Quickcheck and more elaborate techniques such as Refinement Types while having a reasonable expectation of fault tolerance. An Erlang style OTP model satisfies the latter whereas languages like Haskell and Ocaml satisfy the former.
+
+With the introduction of Cloud Haskell, Haskell gained many of Erlang’s advantages while not surrendering its own. Furthermore, Haskell’s modularity and composability has allowed us to use a lighter weight bespoke library called Time Warp for Cardano.
+
+Second, Haskell’s libraries have evolved greatly over the last few years thanks to extensive work of commercial entities like Galois, FP Complete and Well-Typed. As a consequence, Haskell can be used to write production applications24.
+
+Third, PureScript’s rapid evolution has provided a much needed bridge to the JavaScript world akin to what Clojurescript has given Clojure. We expect PureScript will be especially important when it comes to getting Cardano to work in a browser and developing mobile wallets.
+
+Fourth, with respect to dependency resolution, Haskell in the last several years has enjoyed a significant social and technological effort led by technologists like Michael Snoyman through a platform called stackage that is both easy to use and well supported by FP Complete.
+
+Fifth, beyond adequate dependency resolution, we aim for our software builds to be reproducible. In other words, with the same configuration values and dependency versions it should produce exactly the same build artifacts. Through stackage, we have been using NixOps to achieve reproducibility with great success.
+
+Finally, the talent pool of developers specializing in Haskell is reasonably large — compared to its peers — and quite well-trained with the right mix of academic and industry credentials. It also acts as a competency filter as it is uncommon to find experienced Haskell developers without detailed knowledge of computer science.
+
+FORMAL SPECIFICATION AND VERIFICATION
+A significant strength of developing a protocol using a provably correct security model is that it provides a guaranteed limit of adversarial power. One is given a contract that as long as the protocol is followed and the proofs are correct, the adversary cannot violate the security properties claimed.
+
+Deeper reflection makes the prior assertion even more significant. Adversaries can be arbitrarily intelligent and capable. To say they are defeated solely through a mathematical model is extraordinary. And, of course, it is not entirely true.
+
+Reality introduces factors and circumstances that prevent the utopia of pure security and correct behavior from existing. Implementations can be wrong. Hardware can introduce attack vectors previously unconsidered. The security model might be insufficient and not conform to real life use.
+
+A judgement call is needed about how much specification, rigor and checking is demanded for a protocol. For example, endeavors like the SeL4 Microkernel project are a prime example of an all out assault on ambiguity requiring almost 200,000 lines of Isabelle code to verify less than 10,000 lines of C code. Yet an operating system kernel is critical infrastructure that could be a serious security vulnerability if not properly implemented.
+
+Should all cryptographic software require the same Herculean effort? Or can one choose a less vigorous path that produces equivalent outcomes? Also does it matter if the protocol is perfectly implemented if the environment it runs in is notoriously vulnerable such as on Windows XP?
+
+For Cardano, we have chosen the following compromise. First, due to the complex nature of the domains of cryptography and distributed computing, proofs tend to be very subtle, long, complicated and sometimes quite technical. This implies that human driven checking can be tedious and error-prone. Therefore, we believe that every significant proof presented in a white paper written to cover core infrastructure needs to be machine checked.
+
+Second, to verify Haskell code so it correctly corresponds to our white papers, we can choose between two popular options: interfacing with SMT provers via LiquidHaskell and using Isabelle/HOL.
+
+SMT (satisfiability modulo theories) solvers deal with the problem of finding functional parameters that satisfy an equation or inequation, or alternatively showing that such parameters do not exist. As discussed by De Moura and Bjørner, use cases of SMT are various, but the key point is that these techniques are both powerful and can dramatically reduce bugs and semantic errors.
+
+Isabelle/HOL, on the other hand, is a more expressive and diverse tool which can be used to both specify and verify implementation. Isabelle is a generic theorem solver working with higher-order logic constructs, capable of representing sets and other mathematical objects to be used in proofs. Isabelle itself integrates with Z3 SMT prover to work with problems involving such constraints.
+
+Both approaches provide value and therefore we have decided to embrace them both in stages. Human written proofs will be encoded in Isabelle to check their correctness thereby satisfying our machine checking requirement. And we intend on gradually adding Liquid Haskell to all production code in Cardano’s implementation throughout 2017 and 2018.
+
+As a final point, formal verification is only as good as the specification one is verifying from and the toolsets available. One of the primary reasons for choosing Haskell is that it provides the right balance of practicality and theory. Specification derived from white papers looks a lot like Haskell code, and connecting the two is considerably easier than doing so with an imperative language.
+
+There is still enormous difficulty in capturing a proper specification and also updating the specification when changes such as upgrades, bug fixes and other concerns need to be made; however, this reality does not in any way diminish the overall value. If one is going to trouble of building a foundation upon provable security, then the implementation should be what was actually proposed on paper.
+
+TRANSPARENCY
+A final question when discussing the science and engineering of developing a cryptocurrency is how to address transparency. Design decisions are not Boolean and ethereal, coming to developers in dreams and then suddenly becoming cannon. They are derived from experience, debate and lessons learned from earlier mistakes.
+
+The challenge is that a totally transparent development process could influence discussion to become more theatrical than evidence based. Egos, attempts to win over a community, and fear of sounding stupid could force conversations to become sterile and counterproductive.
+
+Furthermore, outsiders could attempt to co-opt the conversation in an effort to force their particular tangent to become the only relevant topic. Everyone has a sacred cow.
+
+So how does one balance the need for a transparent development process, which is owed to the community that has entrusted progress to a set of core developers, with the need for freedom of expression without fear?
+
+With Cardano, we have decided to embrace a standards driven process with directed oversight. The community needs to know that the science and the code are well thought out, checked and actually solve the things that developers claim they do. To this end, peer review should completely satisfy the science component as it has been designed specifically for this purpose and has given us the modern world.
+
+For code, this topic is a bit more opinionated. For Cardano, we have elected to entrust the Cardano Foundation to serve as a final auditor of IOHK’s work. In particular, they are entrusted with the following duties:
+
+Regular review of the source code contained in the Cardano Github to check for quality, test coverage, proper comments and completeness
+
+Review of all Cardano documentation for correctness and usefulness
+
+Verifying the claims that the protocols produced by the scientists are fully implemented
+
+To accomplish this task, IOHK will submit regular and timely reports to the Foundation – and its assigns – to review. The Foundation in turn will release a development oversight report to the Cardano community on at least a quarterly basis.
+
+This first effort is intended to start a broader conversation about how a decentralized project achieves accountability. Development oversight from a trusted third party is a powerful tool to ensure that developers are on track, but it is not sufficient to completely guarantee that the project will always deliver.
+
+For this reason, after the treasury is integrated into CSL, the Foundation will encourage additional development teams to construct alternative clients based upon the formal specifications developed jointly with IOHK. Development diversity has been a great technique used by the Ethereum project to avoid a monoculture forming around a single set of ideas or developers.
+
+With respect to specifications, there is a wealth of knowledge to be gained from the standards process followed by the WC3 and the IETF. Ultimately, each protocol Cardano integrates requires a specification that is independent of academic work or source code. Rather it needs to be in a suitable format such as an RFC.
+
+One of the Cardano Foundation’s core tenets is to act as standards body specifically for the Cardano protocols and to host conversations to update, add or change standards relevant to Cardano. If the internet (a product of standards) through IETF can reach consensus about what core protocols shall be used, then it is entirely reasonable to assume that a dedicated body could facilitate the same outcome.
+
+As a closing note, it is interesting to explore moving these discussions to a decentralized entity hosted on a blockchain. This concept is called a decentralized autonomous organization (DAO) and preliminary work is underway in this area. IOHK will develop a reference DAO model for entities interfacing with Cardano to use if desired and it is the Cardano Foundation’s prerogative to decide whether to embrace it under their standards mandate.
